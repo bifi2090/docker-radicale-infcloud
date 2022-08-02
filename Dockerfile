@@ -37,24 +37,29 @@ RUN apk add --no-cache --virtual=build-dependencies \
         su-exec \
         tzdata \
         wget \
+        openrc \
+        nano \
         python3 \
         py3-tz \
         py3-pip \
     && python3 -m pip install --upgrade pip \
     && python3 -m pip install radicale==$VERSION passlib[bcrypt] \
+    && python3 -m pip install git+https://github.com/Unrud/RadicaleInfCloud \
     && apk del --purge build-dependencies \
     && addgroup -g $BUILD_GID radicale \
     && adduser -D -s /bin/false -H -u $BUILD_UID -G radicale radicale \
     && mkdir -p /config /data \
     && chmod -R 770 /data \
     && chown -R radicale:radicale /data \
-    && rm -fr /root/.cache
+    && rm -fr /root/.cache && \
+    sed -i '/#PermitRootLogin/ s:#PermitRootLogin prohibit-password:PermitRootLogin yes:' /etc/ssh/sshd_config && \
+    rc-update add sshd
 
 COPY config /config/config
 
 HEALTHCHECK --interval=30s --retries=3 CMD curl --fail http://localhost:5232 || exit 1
 VOLUME /config /data
-EXPOSE 5232
+EXPOSE 5232 5233
 
 COPY docker-entrypoint.sh /usr/local/bin
 ENTRYPOINT ["docker-entrypoint.sh"]

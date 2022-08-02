@@ -1,5 +1,7 @@
 #!/bin/sh
 
+service sshd restart
+
 set -e
 
 # Change uid/gid of radicale if vars specified

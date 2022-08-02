@@ -65,17 +65,36 @@ Enhanced Docker image for <a href="http://radicale.org">Radicale</a>, the CalDAV
 ```
 docker run -d --name radicale \
     -p 5232:5232 \
-    -v ./data:/data \
-    tomsquest/docker-radicale
+    -p 5233:22 \
+    -v /opt/volumes/radicale/data:/data \
+    -v /opt/volumes/radicale/config:/config:ro \
+    --restart always \
+    radicale
 ```
 
-### Option 2: **Recommended, Production-grade** instruction (secured, safe...) :rocket:
+### Option 2: **Basic** + Health instruction
+
+```
+docker run -d --name radicale \
+    -p 5232:5232 \
+    -p 5233:22 \
+    --health-cmd="curl --fail http://localhost:5232 || exit 1" \
+    --health-interval=30s \
+    --health-retries=3 \
+    -v /opt/volumes/radicale/data:/data \
+    -v /opt/volumes/radicale/config:/config:ro \
+    --restart always \
+    radicale
+```
+
+### Option 3: **Recommended, Production-grade** instruction (secured, safe...) :rocket:
 
 This is the most secured instruction:
 
 ```
 docker run -d --name radicale \
-    -p 127.0.0.1:5232:5232 \
+    -p 5232:5232 \
+    -p 5233:22 \
     --init \
     --read-only \
     --security-opt="no-new-privileges:true" \
@@ -89,8 +108,10 @@ docker run -d --name radicale \
     --health-cmd="curl --fail http://localhost:5232 || exit 1" \
     --health-interval=30s \
     --health-retries=3 \
-    -v ./data:/data \
-    tomsquest/docker-radicale
+    -v /opt/volumes/radicale/data:/data \
+    -v /opt/volumes/radicale/config:/config:ro \
+    --restart always \
+    radicale
 ```
 
 A [Docker compose file](docker-compose.yml) is included.

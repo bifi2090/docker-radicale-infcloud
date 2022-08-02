@@ -55,20 +55,22 @@ hosts = 0.0.0.0:5232
 # Authentication method
 # Value: none | htpasswd | remote_user | http_x_remote_user
 #type = none
+type = htpasswd
 
 # Htpasswd filename
 #htpasswd_filename = /etc/radicale/users
+htpasswd_filename = /config/users
 
 # Htpasswd encryption method
 # Value: plain | bcrypt | md5
 # bcrypt requires the installation of radicale[bcrypt].
-#htpasswd_encryption = md5
+htpasswd_encryption = md5
 
 # Incorrect authentication delay (seconds)
-#delay = 1
+delay = 1
 
 # Message displayed in the client when a password is needed
-#realm = Radicale - Password Required
+realm = Radicale - Password Required
 
 
 [rights]
@@ -85,7 +87,7 @@ hosts = 0.0.0.0:5232
 
 # Storage backend
 # Value: multifilesystem | multifilesystem_nolock
-#type = multifilesystem
+type = multifilesystem
 
 # Folder for storing local collections, created if not present
 #filesystem_folder = /var/lib/radicale/collections
@@ -100,11 +102,10 @@ filesystem_folder = /data/collections
 
 
 [web]
-
-# Web interface backend
-# Value: none | internal
-#type = internal
-
+type = radicale_infcloud
+# Optional InfCloud configuration
+infcloud_config = globalInterfaceLanguage='de_DE';
+                  globalTimeZone='Europe/Berlin';
 
 [logging]
 

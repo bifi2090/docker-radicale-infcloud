@@ -28,6 +28,7 @@ Enhanced Docker image for <a href="http://radicale.org">Radicale</a>, the CalDAV
 - [Custom configuration](#custom-configuration)
 - [Volumes versus Bind-Mounts](#volumes-versus-bind-mounts)
 - [Running with Docker compose](#running-with-docker-compose)
+- [Running with Podman](#running-with-podman)
 - [Multi-architecture](#multi-architecture)
 - [Extending the image](#extending-the-image)
 - [Versioning with Git](#versioning-with-git)
@@ -47,7 +48,7 @@ Enhanced Docker image for <a href="http://radicale.org">Radicale</a>, the CalDAV
 
 * :closed_lock_with_key: **Secured**: the container is read-only, with only access to its data dir, and without extraneous privileges
 * :fire: **Safe**: run as a normal user (not root)
-* :building_construction: **Multi-architecture**: run on amd64, arm64 and armv7 (Raspberry Pi, ...)
+* :building_construction: **Multi-architecture**: run on amd64 and arm64
 * :sparkles: **Batteries included**: git and ssh included for [versioning](https://github.com/tomsquest/docker-radicale/#versioning-with-git) and Pytz/tz-data for proper timezone handling
 
 ## Changelog
@@ -156,11 +157,15 @@ docker run -d --name radicale tomsquest/docker-radicale \
 ## Running with Docker compose
 
 A [Docker compose file](docker-compose.yml) is included. 
-It can also be [extended](https://docs.docker.com/compose/production/#modify-your-compose-file-for-production). 
+It can also be [extended](https://docs.docker.com/compose/production/#modify-your-compose-file-for-production).
+
+## Running with Podman
+
+[Greylinux](https://github.com/Greylinux) has written [some instructions](https://github.com/tomsquest/docker-radicale/issues/122#issuecomment-1361240992) to run the image with Podman.
 
 ## Multi-architecture
 
-The correct image type for your architecture will be automatically selected by Docker, whether it is amd64, arm64 or armv7 (Raspberry Pi).
+The correct image type for your architecture will be automatically selected by Docker, whether it is amd64 or arm64.
 
 ## Extending the image
 
@@ -195,8 +200,7 @@ This hook can be used to keep a versions of your CalDAV/CardDAV files through gi
 
 This image provides `git` to support this feature. 
 
-Refer to the [official documentation of Radicale](https://radicale.org/3.0.html#tutorials/versioning-with-git) 
-for the details.
+Refer to the [official documentation of Radicale](https://radicale.org/v3.html#versioning-with-git) for the details.
 
 ## Custom User/Group ID for the data volume
 
@@ -276,7 +280,9 @@ To run the tests:
 ## Releasing
 
 1. Create a Git tag, eg. `3.0.6.0`, push it and the CI will build the images and publish them on Docker hub
-1. Update the `latest` tag
+2. Update the `latest` tag
+3. Create release on GitHub (`Draft a new release` > pick the tag > `Generate release notes` > `Publish release`)
+4. Update `CHANGELOG.md`
 
 Example instructions :
 
@@ -291,6 +297,8 @@ git push --delete origin latest && git tag -d latest && git tag latest && git pu
 
 ## Contributors
 
+* [Jauder Ho](https://github.com/jauderho): update alpine to 3.17.2
+* [Greylinux](https://github.com/Greylinux): running with podman
 * [Tionis](https://github.com/tionis): add openssh for git ssh remotes
 * [flixhsw](https://github.com/flixhsw): support armv7 (Raspberry) and simplify the CI using Docker Buildx
 * [hecd](https://github.com/hecd): fix to run su-exec only when the actual user is root

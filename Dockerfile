@@ -1,4 +1,4 @@
-FROM alpine:3.17.2
+FROM alpine:latest
 
 ARG COMMIT_ID
 ENV COMMIT_ID ${COMMIT_ID}
@@ -37,7 +37,6 @@ RUN apk add --no-cache --virtual=build-dependencies \
         su-exec \
         tzdata \
         wget \
-        openrc \
         nano \
         python3 \
         py3-tz \
@@ -51,15 +50,13 @@ RUN apk add --no-cache --virtual=build-dependencies \
     && mkdir -p /config /data \
     && chmod -R 770 /data \
     && chown -R radicale:radicale /data \
-    && rm -fr /root/.cache && \
-    sed -i '/#PermitRootLogin/ s:#PermitRootLogin prohibit-password:PermitRootLogin yes:' /etc/ssh/sshd_config && \
-    rc-update add sshd
+    && rm -fr /root/.cache
 
 COPY config /config/config
 
 HEALTHCHECK --interval=30s --retries=3 CMD curl --fail http://localhost:5232 || exit 1
 VOLUME /config /data
-EXPOSE 5232 5233
+EXPOSE 5232
 
 COPY docker-entrypoint.sh /usr/local/bin
 ENTRYPOINT ["docker-entrypoint.sh"]
